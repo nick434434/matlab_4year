@@ -26,7 +26,13 @@ mode = 0;
 if mode == 0
     eig = ifft(eig);
     C = Circulant(real(eig));
-    F = S0 * C;
+    if length(r) == 3
+        for c = 1:r(3)
+            F(:, :, c) = S0(:, :, c) * C;
+        end
+    else
+        F = S0 * C;
+    end
     F = real(F);
 
     %m = min(min(F));
@@ -45,11 +51,17 @@ if mode == 1
     FEF = ifft(FDFFE);
 end
 
-if all(FEF == zeros(r(1), r(2))) %mode not in 0, 1, 2
-    FEF = S0;
+if length(r) == 2
+    if all(FEF == zeros(r(1), r(2))) %mode not in 0, 1, 2
+        FEF = S0;
+    end
+else
+    if all(FEF(:, :, 1) == zeros(r(1), r(2)))
+        FEF = S0;
+    end
 end
 
-FEF = uint8(FEF);
+% FEF = uint8(FEF);
 
 end
 

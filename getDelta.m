@@ -17,12 +17,12 @@ k = 0;
 m = 0;
 for i = 2:(round(n/2)-1)
     if abs(eig(i)) < b || abs(eig(i + round(n/2))) < b
-        if abs(eig(i)) < b*b || abs(eig(i + round(n/2))) < b*b
-            if abs(eig(i)) < b*b
+        if abs(eig(i)) < b*b || abs(eig(i + round(n/2))) < b*b*b
+            if abs(eig(i)) < b*b*b
                 m = m + 1;
                 additiveIndices(m) = i;
             end
-            if abs(eig(i + round(n/2))) < b*b
+            if abs(eig(i + round(n/2))) < b*b*b
                 m = m + 1;
                 additiveIndices(m) = i + round(n/2);
             end
@@ -37,10 +37,13 @@ indices = indices(1:k);
 additiveIndices = additiveIndices(1:m);
 v = eig;
 v(1:n) = 1;
+disp(numel(indices) + numel(additiveIndices));
+disp(numel(additiveIndices));
 v(indices) = 2 ./ (abs(eig(indices)) + abs(eig(mod(indices + round(n/2), n) + 1))) .* b;
 v(mod(indices + round(n/2), n) + 1) = v(indices);
 m = max(v(v ~= Inf));
 v(v == Inf) = m;
+disp(sum(v));
 
 end
 
